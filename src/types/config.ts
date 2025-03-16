@@ -26,6 +26,7 @@ export type SolidStyleOption = 'flat' | 'plastic';
 export type BorderOption = 'rounded' | 'playful' | 'conservative';
 export type SurfaceOption = 'filled' | 'translucent';
 export type TransitionOption = 'all' | 'micro' | 'macro';
+export type ScalingOption = '90' | '95' | '100' | '105' | '110';
 
 export interface StyleConfig {
     theme: ThemeOption;
@@ -37,6 +38,7 @@ export interface StyleConfig {
     border: BorderOption;
     surface: SurfaceOption;
     transition: TransitionOption;
+    scaling: ScalingOption;
 }
 
 // Types pour les effets

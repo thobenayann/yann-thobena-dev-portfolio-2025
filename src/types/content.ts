@@ -104,6 +104,19 @@ export interface AboutContent {
     };
 }
 
+export interface BlogPostMetadata {
+    title: string;
+    publishedAt: string;
+    image?: string;
+    tag?: string;
+}
+
+export interface BlogPost {
+    slug: string;
+    metadata: BlogPostMetadata;
+    content?: string;
+}
+
 export interface BlogContent {
     label: string;
     title: string;
