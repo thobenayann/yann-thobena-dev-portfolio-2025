@@ -40,6 +40,7 @@ export const TypingAnimation = ({
     className,
     duration = 60,
     delay = 0,
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     as: Component = 'span',
     ...props
 }: TypingAnimationProps) => {
@@ -49,13 +50,9 @@ export const TypingAnimation = ({
         );
     }
 
-    const MotionComponent = motion.create(Component, {
-        forwardMotionProps: true,
-    });
-
     const [displayedText, setDisplayedText] = useState<string>('');
     const [started, setStarted] = useState(false);
-    const elementRef = useRef<HTMLElement | null>(null);
+    const elementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const startTimeout = setTimeout(() => {
@@ -83,13 +80,13 @@ export const TypingAnimation = ({
     }, [children, duration, started]);
 
     return (
-        <MotionComponent
+        <motion.div
             ref={elementRef}
             className={cn('text-sm font-normal tracking-tight', className)}
             {...props}
         >
             {displayedText}
-        </MotionComponent>
+        </motion.div>
     );
 };
 

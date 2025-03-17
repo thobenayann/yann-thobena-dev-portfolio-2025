@@ -9,6 +9,7 @@ const nextConfig = {
             jsxImportSource: 'react',
         },
     },
+    transpilePackages: ['framer-motion'],
 };
 
 const withMDX = createMDX({
