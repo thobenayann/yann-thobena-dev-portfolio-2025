@@ -9,7 +9,8 @@ const nextConfig = {
             jsxImportSource: 'react',
         },
     },
-    transpilePackages: ['framer-motion'],
+    // Transpiler les packages qui pourraient causer des problèmes de SSR
+    transpilePackages: ['react-icons'],
 };
 
 const withMDX = createMDX({

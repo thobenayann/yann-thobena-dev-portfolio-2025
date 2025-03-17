@@ -1,6 +1,5 @@
 'use client';
 
-import NotFound from '@/app/not-found';
 import { protectedRoutes, routes } from '@/app/resources';
 import {
     Button,
@@ -10,7 +9,7 @@ import {
     PasswordInput,
     Spinner,
 } from '@/once-ui/components';
-import { usePathname } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface RouteGuardProps {
@@ -92,7 +91,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
     }
 
     if (!isRouteEnabled) {
-        return <NotFound />;
+        return notFound();
     }
 
     if (isPasswordRequired && !isAuthenticated) {

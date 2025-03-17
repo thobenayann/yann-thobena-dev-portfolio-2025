@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client';
 
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
@@ -5,7 +6,6 @@ import { MDXRemote } from 'next-mdx-remote';
 import React, { ReactNode } from 'react';
 
 import { HeadingLink } from '@/components';
-import { AnimatedSpan, Terminal } from '@/components/magic-ui/terminal-block';
 import { SmartImage, SmartLink, Text } from '@/once-ui/components';
 import { CodeBlock } from '@/once-ui/modules';
 
@@ -154,19 +154,49 @@ type CodeBlockProps = {
     [key: string]: ReactNode | string | number | boolean | object | undefined;
 };
 
-// Types pour Terminal et AnimatedSpan
-type LocalTerminalProps = {
+// Composants de remplacement simples pour Terminal et AnimatedSpan
+function SimpleTerminal({
+    children,
+    className,
+}: {
     children: ReactNode;
     className?: string;
-};
+}) {
+    return (
+        <div
+            className={`rounded-xl border border-gray-200 bg-gray-50 p-4 ${
+                className || ''
+            }`}
+        >
+            <div className='flex gap-2 border-b border-gray-200 pb-2 mb-2'>
+                <div className='h-2 w-2 rounded-full bg-red-500'></div>
+                <div className='h-2 w-2 rounded-full bg-yellow-500'></div>
+                <div className='h-2 w-2 rounded-full bg-green-500'></div>
+            </div>
+            <pre>
+                <code className='block overflow-auto'>{children}</code>
+            </pre>
+        </div>
+    );
+}
 
-type LocalAnimatedSpanProps = {
+function SimpleAnimatedSpan({
+    children,
+    className,
+    delay: _delay, // Ignoré, plus d'animation
+    ...props
+}: {
     children: ReactNode;
-    delay?: number;
     className?: string;
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    delay?: number;
     [key: string]: any;
-};
+}) {
+    return (
+        <span className={`inline-block ${className || ''}`} {...props}>
+            {children}
+        </span>
+    );
+}
 
 type MDXComponents = {
     p: React.ComponentType<MDXComponentProps>;
@@ -180,8 +210,13 @@ type MDXComponents = {
     a: React.ComponentType<MDXComponentProps & { href: string }>;
     Table: React.ComponentType<TableProps>;
     CodeBlock: React.ComponentType<CodeBlockProps>;
-    Terminal: React.ComponentType<LocalTerminalProps>;
-    AnimatedSpan: React.ComponentType<LocalAnimatedSpanProps>;
+    Terminal: React.ComponentType<{ children: ReactNode; className?: string }>;
+    AnimatedSpan: React.ComponentType<{
+        children: ReactNode;
+        delay?: number;
+        className?: string;
+        [key: string]: any;
+    }>;
 };
 
 const components: MDXComponents = {
@@ -198,9 +233,16 @@ const components: MDXComponents = {
     a: CustomLink as React.ComponentType<MDXComponentProps & { href: string }>,
     Table,
     CodeBlock,
-    Terminal: Terminal as unknown as React.ComponentType<LocalTerminalProps>,
-    AnimatedSpan:
-        AnimatedSpan as unknown as React.ComponentType<LocalAnimatedSpanProps>,
+    Terminal: SimpleTerminal as React.ComponentType<{
+        children: ReactNode;
+        className?: string;
+    }>,
+    AnimatedSpan: SimpleAnimatedSpan as React.ComponentType<{
+        children: ReactNode;
+        delay?: number;
+        className?: string;
+        [key: string]: any;
+    }>,
 };
 
 type CustomMDXProps = {
