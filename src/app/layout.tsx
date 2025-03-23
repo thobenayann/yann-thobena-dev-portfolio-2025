@@ -7,6 +7,7 @@ import { baseURL, effects, style } from '@/app/resources';
 import { Footer, Header, RouteGuard } from '@/components';
 import { SpacingToken } from '@/once-ui/types';
 import { OpacityLevel } from '@/types/effects';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Inter, Source_Code_Pro } from 'next/font/google';
 
@@ -155,6 +156,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                     <Footer />
                 </Column>
             </ToastProvider>
+            <Analytics />
         </Flex>
     );
 }
