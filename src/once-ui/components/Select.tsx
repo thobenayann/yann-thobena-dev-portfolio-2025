@@ -1,7 +1,6 @@
 /* eslint-disable */
 'use client';
 
-import { Placement } from '@floating-ui/react-dom';
 import classNames from 'classnames';
 import React, {
     forwardRef,
@@ -10,32 +9,23 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import {
-    DropdownWrapper,
-    Flex,
-    Icon,
-    IconButton,
-    Input,
-    InputProps,
-    Option,
-} from '.';
-import type { DropdownWrapperProps } from './DropdownWrapper';
+import { Flex, Icon, IconButton, Input, InputProps, Option } from '.';
 import inputStyles from './Input.module.scss';
 import type { OptionProps } from './Option';
 
 type SelectOptionType = Omit<OptionProps, 'selected'>;
 
-interface SelectProps
-    extends Omit<InputProps, 'onSelect' | 'value'>,
-        Pick<DropdownWrapperProps, 'minHeight' | 'minWidth' | 'maxWidth'> {
+interface SelectProps extends Omit<InputProps, 'onSelect' | 'value'> {
     options: SelectOptionType[];
     value?: string;
     emptyState?: ReactNode;
     onSelect?: (value: string) => void;
-    floatingPlacement?: Placement;
     searchable?: boolean;
     className?: string;
     style?: React.CSSProperties;
+    minHeight?: string | number;
+    minWidth?: string | number;
+    maxWidth?: string | number;
 }
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
@@ -49,7 +39,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             minHeight,
             minWidth,
             maxWidth,
-            floatingPlacement,
             className,
             style,
             ...rest
@@ -68,6 +57,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         const [searchQuery, setSearchQuery] = useState('');
         const selectRef = useRef<HTMLDivElement | null>(null);
         const clearButtonRef = useRef<HTMLButtonElement>(null);
+        const dropdownRef = useRef<HTMLDivElement | null>(null);
 
         const handleFocus = () => {
             setIsFocused(true);
@@ -179,43 +169,53 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         }, []);
 
         return (
-            <DropdownWrapper
-                fillWidth
+            <div
                 ref={(node) => {
                     selectRef.current = node;
                     if (typeof ref === 'function') ref(node);
                     else if (ref) ref.current = node;
                 }}
-                isOpen={isDropdownOpen}
-                onOpenChange={setIsDropdownOpen}
-                floatingPlacement={floatingPlacement}
-                minHeight={minHeight}
-                trigger={
-                    <Input
-                        {...rest}
+                style={{ position: 'relative', width: '100%' }}
+            >
+                <Input
+                    {...rest}
+                    style={{
+                        textOverflow: 'ellipsis',
+                        ...style,
+                    }}
+                    value={value}
+                    onFocus={handleFocus}
+                    onKeyDown={handleKeyDown}
+                    readOnly
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className={classNames('cursor-interactive', 'fill-width', {
+                        [inputStyles.filled]: isFilled,
+                        [inputStyles.focused]: isFocused,
+                        className,
+                    })}
+                    aria-haspopup='listbox'
+                    aria-expanded={isDropdownOpen}
+                />
+
+                {isDropdownOpen && (
+                    <div
+                        ref={dropdownRef}
                         style={{
-                            textOverflow: 'ellipsis',
-                            ...style,
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            zIndex: 1000,
+                            width: '100%',
+                            backgroundColor: 'var(--color-surface)',
+                            borderRadius: 'var(--radius-m)',
+                            boxShadow: 'var(--shadow-l)',
+                            marginTop: '4px',
+                            minWidth: minWidth,
+                            maxWidth: maxWidth,
+                            minHeight: minHeight,
+                            overflow: 'hidden',
                         }}
-                        value={value}
-                        onFocus={handleFocus}
-                        onKeyDown={handleKeyDown}
-                        readOnly
-                        className={classNames(
-                            'cursor-interactive',
-                            'fill-width',
-                            {
-                                [inputStyles.filled]: isFilled,
-                                [inputStyles.focused]: isFocused,
-                                className,
-                            }
-                        )}
-                        aria-haspopup='listbox'
-                        aria-expanded={isDropdownOpen}
-                    />
-                }
-                dropdown={
-                    <>
+                    >
                         {searchable && (
                             <Flex fillWidth position='relative'>
                                 <Input
@@ -291,9 +291,9 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                                     </Flex>
                                 )}
                         </Flex>
-                    </>
-                }
-            />
+                    </div>
+                )}
+            </div>
         );
     }
 );
