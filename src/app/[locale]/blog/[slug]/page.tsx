@@ -14,7 +14,7 @@ import { person } from '@/resources/content';
 import { formatDate } from '@/utils/formatDate';
 import { getPosts } from '@/utils/utils';
 import { hasLocale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { serialize } from 'next-mdx-remote/serialize';
 import { notFound } from 'next/navigation';
 
@@ -31,8 +31,6 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: BlogParams) {
     const { slug, locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'Blog' });
-
     const post = getPosts(['blog', 'posts'], locale).find(
         (post) => post.slug === slug
     );

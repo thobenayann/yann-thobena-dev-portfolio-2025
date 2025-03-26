@@ -4,15 +4,14 @@ import { routing } from '@/i18n/routing';
 import { Column, Heading, Text } from '@/once-ui/components';
 import { baseURL } from '@/resources';
 import { blog, newsletter, person } from '@/resources/content';
-import { getPosts } from '@/utils/utils';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 interface BlogParams {
-    params: {
+    params: Promise<{
         locale: string;
-    };
+    }>;
 }
 
 export function generateStaticParams() {
@@ -20,7 +19,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: BlogParams) {
-    const { locale } = params;
+    const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Blog' });
 
     return {
@@ -53,7 +52,7 @@ export async function generateMetadata({ params }: BlogParams) {
 }
 
 export default async function Blog({ params }: BlogParams) {
-    const { locale } = params;
+    const { locale } = await params;
 
     if (!hasLocale(routing.locales, locale)) {
         notFound();
@@ -61,8 +60,6 @@ export default async function Blog({ params }: BlogParams) {
 
     // Enable static rendering
     setRequestLocale(locale);
-
-    const posts = getPosts(['blog', 'posts'], locale);
 
     return (
         <Column maxWidth='s'>
