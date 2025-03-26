@@ -1,12 +1,26 @@
-import { baseURL } from '@/app/resources';
-import { person, work } from '@/app/resources/content';
-import { getPosts } from '@/app/utils/utils';
 import { Projects } from '@/components/work/Projects';
+import { routing } from '@/i18n/routing';
 import { Column } from '@/once-ui/components';
+import { baseURL } from '@/resources';
+import { person } from '@/resources/content';
+import { useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { use } from 'react';
 
-export async function generateMetadata() {
-    const title = work.title;
-    const description = work.description;
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'Work' });
+
+    const title = t('title');
+    const description = t('description');
     const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
     return {
@@ -33,8 +47,17 @@ export async function generateMetadata() {
     };
 }
 
-export default function Work() {
-    const allProjects = getPosts(['src', 'app', 'work', 'projects']);
+export default function Work({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = use(params);
+
+    // Enable static rendering
+    setRequestLocale(locale);
+
+    const t = useTranslations('Work');
 
     return (
         <Column maxWidth='m'>
@@ -45,25 +68,18 @@ export default function Work() {
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'CollectionPage',
-                        headline: work.title,
-                        description: work.description,
+                        headline: t('title'),
+                        description: t('description'),
                         url: `https://${baseURL}/projects`,
                         image: `${baseURL}/og?title=Design%20Projects`,
                         author: {
                             '@type': 'Person',
                             name: person.name,
                         },
-                        hasPart: allProjects.map((project) => ({
-                            '@type': 'CreativeWork',
-                            headline: project.metadata.title,
-                            description: project.metadata.summary,
-                            url: `https://${baseURL}/projects/${project.slug}`,
-                            image: `${baseURL}/${project.metadata.image}`,
-                        })),
                     }),
                 }}
             />
-            <Projects />
+            <Projects locale={locale} />
         </Column>
     );
 }

@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useState } from 'react';
 import { Column, Flex, IconButton, Scroller, SegmentedControl, Text } from '.';
 
-import { style as appStyle } from '@/app/resources';
+import { style as appStyle } from '@/resources';
 import classNames from 'classnames';
 import styles from './StylePanel.module.scss';
 

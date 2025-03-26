@@ -1,6 +1,5 @@
 'use client';
 
-import { protectedRoutes, routes } from '@/app/resources';
 import {
     Button,
     Column,
@@ -9,6 +8,7 @@ import {
     PasswordInput,
     Spinner,
 } from '@/once-ui/components';
+import { protectedRoutes, routes } from '@/resources';
 import { notFound, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -35,13 +35,18 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
             const checkRouteEnabled = () => {
                 if (!pathname) return false;
 
-                if (pathname in routes) {
-                    return routes[pathname as keyof typeof routes];
+                // Remove locale prefix from pathname (e.g., /fr/about -> /about)
+                const pathWithoutLocale = pathname.replace(/^\/[^/]+/, '');
+
+                if (pathWithoutLocale === '') return routes['/'];
+
+                if (pathWithoutLocale in routes) {
+                    return routes[pathWithoutLocale as keyof typeof routes];
                 }
 
                 const dynamicRoutes = ['/blog', '/work'] as const;
                 for (const route of dynamicRoutes) {
-                    if (pathname?.startsWith(route) && routes[route]) {
+                    if (pathWithoutLocale?.startsWith(route) && routes[route]) {
                         return true;
                     }
                 }
@@ -52,7 +57,13 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
             const routeEnabled = checkRouteEnabled();
             setIsRouteEnabled(routeEnabled);
 
-            if (protectedRoutes[pathname as keyof typeof protectedRoutes]) {
+            // Remove locale prefix for protected routes check
+            const pathWithoutLocale = pathname.replace(/^\/[^/]+/, '');
+            if (
+                protectedRoutes[
+                    pathWithoutLocale as keyof typeof protectedRoutes
+                ]
+            ) {
                 setIsPasswordRequired(true);
 
                 const response = await fetch('/api/check-auth');

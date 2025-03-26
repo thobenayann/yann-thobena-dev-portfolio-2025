@@ -8,7 +8,7 @@ import {
     StyleConfig,
 } from '@/types/config';
 
-const baseURL: BaseURL = 'demo.magic-portfolio.com';
+const baseURL: BaseURL = 'yanndevweb.com/';
 
 const routes: Routes = {
     '/': true,

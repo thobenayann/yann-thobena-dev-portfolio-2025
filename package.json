@@ -24,6 +24,7 @@
         "framer-motion": "^12.5.0",
         "gray-matter": "^4.0.3",
         "next": "^15.2.3",
+        "next-intl": "^4.0.2",
         "next-mdx-remote": "^4.4.1",
         "postcss": "^8.4.39",
         "postcss-preset-env": "^9.5.15",

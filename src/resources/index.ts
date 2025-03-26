@@ -7,7 +7,7 @@ export {
     protectedRoutes,
     routes,
     style,
-} from '@/app/resources/config';
+} from '@/resources/config';
 export {
     about,
     blog,
@@ -17,4 +17,4 @@ export {
     person,
     social,
     work,
-} from '@/app/resources/content';
+} from '@/resources/content';

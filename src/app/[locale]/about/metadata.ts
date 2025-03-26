@@ -1,5 +1,5 @@
-import { baseURL } from '@/app/resources';
-import { about } from '@/app/resources/content';
+import { baseURL } from '@/resources';
+import { about } from '@/resources/content';
 
 export async function generateMetadata() {
     const title = about.title;

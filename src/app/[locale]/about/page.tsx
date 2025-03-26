@@ -1,6 +1,5 @@
 'use client';
 
-import { about, person, social } from '@/app/resources/content';
 import TableOfContents from '@/components/about/TableOfContents';
 import styles from '@/components/about/about.module.scss';
 import {
@@ -15,6 +14,7 @@ import {
     Tag,
     Text,
 } from '@/once-ui/components';
+import { about, person, social } from '@/resources/content';
 import React from 'react';
 
 export default function About() {

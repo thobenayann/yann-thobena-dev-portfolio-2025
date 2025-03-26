@@ -126,13 +126,27 @@ function getMDXData(dir: string) {
     }
 }
 
-export function getPosts(customPath = ['', '', '', '']) {
+export function getPosts(customPath = ['', '', '', ''], locale = 'fr') {
     try {
-        const postsDir = path.join(process.cwd(), ...customPath);
+        const pathWithLocale = ['src', 'app', '[locale]', ...customPath];
+        const postsDir = path.join(process.cwd(), ...pathWithLocale);
+
+        if (!fs.existsSync(postsDir)) {
+            const fallbackPath = ['src', 'app', ...customPath];
+            const fallbackDir = path.join(process.cwd(), ...fallbackPath);
+            if (fs.existsSync(fallbackDir)) {
+                return getMDXData(fallbackDir);
+            }
+            console.error(`Neither ${postsDir} nor ${fallbackDir} exist`);
+            return [];
+        }
+
         return getMDXData(postsDir);
     } catch (error) {
         console.error(
-            `Error in getPosts with path ${customPath.join('/')}:`,
+            `Error in getPosts with path ${customPath.join(
+                '/'
+            )} and locale ${locale}:`,
             error
         );
         return [];

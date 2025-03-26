@@ -1,9 +1,6 @@
-import { baseURL } from '@/app/resources';
-import { person } from '@/app/resources/content';
-import { formatDate } from '@/app/utils/formatDate';
-import { getPosts } from '@/app/utils/utils';
 import { CustomMDX } from '@/components/mdx';
 import ScrollToHash from '@/components/ScrollToHash';
+import { routing } from '@/i18n/routing';
 import {
     AvatarGroup,
     Button,
@@ -12,27 +9,31 @@ import {
     Row,
     Text,
 } from '@/once-ui/components';
+import { baseURL } from '@/resources';
+import { person } from '@/resources/content';
+import { formatDate } from '@/utils/formatDate';
+import { getPosts } from '@/utils/utils';
+import { hasLocale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { serialize } from 'next-mdx-remote/serialize';
 import { notFound } from 'next/navigation';
 
 interface BlogParams {
     params: Promise<{
         slug: string;
+        locale: string;
     }>;
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-    const posts = getPosts(['src', 'app', 'blog', 'posts']);
-    return posts.map((post) => ({
-        slug: post.slug,
-    }));
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata(props: BlogParams) {
-    const params = await props.params;
-    const { slug } = params;
+export async function generateMetadata({ params }: BlogParams) {
+    const { slug, locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'Blog' });
 
-    const post = getPosts(['src', 'app', 'blog', 'posts']).find(
+    const post = getPosts(['blog', 'posts'], locale).find(
         (post) => post.slug === slug
     );
 
@@ -75,10 +76,18 @@ export async function generateMetadata(props: BlogParams) {
     };
 }
 
-export default async function Blog(props: BlogParams) {
-    const params = await props.params;
-    const post = getPosts(['src', 'app', 'blog', 'posts']).find(
-        (post) => post.slug === params.slug
+export default async function Blog({ params }: BlogParams) {
+    const { slug, locale } = await params;
+
+    if (!hasLocale(routing.locales, locale)) {
+        notFound();
+    }
+
+    // Enable static rendering
+    setRequestLocale(locale);
+
+    const post = getPosts(['blog', 'posts'], locale).find(
+        (post) => post.slug === slug
     );
 
     if (!post) {

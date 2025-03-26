@@ -1,6 +1,5 @@
 'use client';
 
-import { mailchimp } from '@/app/resources';
 import {
     Background,
     Button,
@@ -11,6 +10,7 @@ import {
     Text,
 } from '@/once-ui/components';
 import { SpacingToken } from '@/once-ui/types';
+import { mailchimp } from '@/resources';
 import {
     NewsletterFormValues,
     newsletterSchema,

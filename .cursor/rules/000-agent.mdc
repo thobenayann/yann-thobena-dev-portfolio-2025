@@ -1,16 +1,22 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ---
 description: Styles used in our application
 globs: 
 ---
+- Start all your answer with a robot emoji
 - Write concise, technical TypeScript code using functional and declarative programming patterns.
 - Avoid classes; prefer iteration and modularization over code duplication.
 - Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
 - Structure files into: exported component, subcomponents, helpers, static content, and types.
+- Never ask for launching yourself the developmen server (e.g., `pnpm run dev`).
+
+## Installing dependencies
+
+- only use "pnpm" for dependencies
 
 ## syntax-and-formatting
 

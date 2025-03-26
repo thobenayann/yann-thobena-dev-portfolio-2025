@@ -1,0 +1,50 @@
+{
+    "Home": {
+        "title": "Portfolio de Yann THOBENA",
+        "description": "Site portfolio présentant mon travail en tant que Designer & Développeur d'Applications",
+        "headline": "Designer & Développeur d'Applications",
+        "subline": "Je suis Yann, un designer d'applications chez IPANOVA, où je conçois des expériences utilisateur intuitives.\nJe suis également développeur web fullstack, créant des applications web robustes et évolutives."
+    },
+    "About": {
+        "title": "À propos de moi",
+        "description": "Découvrez Yann THOBENA, Designer & Développeur d'Applications de Toulouse, France",
+        "intro": {
+            "title": "Introduction"
+        },
+        "work": {
+            "title": "Expérience professionnelle"
+        },
+        "studies": {
+            "title": "Formation & Éducation"
+        },
+        "technical": {
+            "title": "Compétences techniques"
+        }
+    },
+    "Blog": {
+        "title": "Écrits sur la conception d'applications, l'IA, la technologie et plus...",
+        "description": "Découvrez les derniers articles de Yann"
+    },
+    "Work": {
+        "title": "Mes projets",
+        "description": "Projets de design et développement par Yann"
+    },
+    "Hobbies": {
+        "title": "Mes passions",
+        "description": "Découvrez les passions de Yann"
+    },
+    "Navigation": {
+        "home": "Accueil",
+        "about": "À propos",
+        "work": "Projets",
+        "blog": "Blog",
+        "hobbies": "Passions"
+    },
+    "Newsletter": {
+        "title": "Abonnez-vous à la newsletter de Yann",
+        "description": "J'écris occasionnellement sur la conception logicielle, la technologie et je partage des réflexions sur l'intersection du code et des besoins des utilisateurs."
+    },
+    "Common": {
+        "latestFromBlog": "Derniers articles du blog"
+    }
+}

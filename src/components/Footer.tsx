@@ -1,5 +1,5 @@
-import { person, social } from '@/app/resources/content';
 import { Flex, IconButton, SmartLink, Text } from '@/once-ui/components';
+import { person, social } from '@/resources/content';
 import styles from './Footer.module.scss';
 
 export const Footer = () => {

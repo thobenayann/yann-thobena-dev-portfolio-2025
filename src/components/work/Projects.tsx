@@ -1,13 +1,14 @@
-import { getPosts } from '@/app/utils/utils';
 import { ProjectCard } from '@/components';
 import { Column } from '@/once-ui/components';
+import { getPosts } from '@/utils/utils';
 
 interface ProjectsProps {
     range?: [number, number?];
+    locale: string;
 }
 
-export function Projects({ range }: ProjectsProps) {
-    const allProjects = getPosts(['src', 'app', 'work', 'projects']);
+export function Projects({ range, locale }: ProjectsProps) {
+    const allProjects = getPosts(['work', 'projects'], locale);
 
     const sortedProjects = allProjects.sort((a, b) => {
         return (

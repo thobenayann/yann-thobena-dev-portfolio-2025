@@ -1,11 +1,27 @@
-import { baseURL } from '@/app/resources';
-import { hobbies, person } from '@/app/resources/content';
 import MasonryGrid from '@/components/hobbies/MasonryGrid';
+import { routing } from '@/i18n/routing';
 import { Flex } from '@/once-ui/components';
+import { baseURL } from '@/resources';
+import { person } from '@/resources/content';
+import { hasLocale, useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { use } from 'react';
 
-export async function generateMetadata() {
-    const title = hobbies.title;
-    const description = hobbies.description;
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'Hobbies' });
+
+    const title = t('title');
+    const description = t('description');
     const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
     return {
@@ -32,7 +48,22 @@ export async function generateMetadata() {
     };
 }
 
-export default function Hobbies() {
+export default function Hobbies({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = use(params);
+
+    if (!hasLocale(routing.locales, locale)) {
+        notFound();
+    }
+
+    // Enable static rendering
+    setRequestLocale(locale);
+
+    const t = useTranslations('Hobbies');
+
     return (
         <Flex fillWidth>
             <script
@@ -42,18 +73,9 @@ export default function Hobbies() {
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'ItemList',
-                        name: hobbies.title,
-                        description: hobbies.description,
+                        name: t('title'),
+                        description: t('description'),
                         url: `https://${baseURL}/hobbies`,
-                        itemListElement: hobbies.images.map((image, index) => ({
-                            '@type': 'ListItem',
-                            position: index + 1,
-                            item: {
-                                '@type': 'ImageObject',
-                                url: `${baseURL}${image.src}`,
-                                description: image.alt,
-                            },
-                        })),
                         author: {
                             '@type': 'Person',
                             name: person.name,

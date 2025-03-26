@@ -1,0 +1,50 @@
+{
+    "Home": {
+        "title": "Yann THOBENA's Portfolio",
+        "description": "Portfolio website showcasing my work as an Application Designer & Developer",
+        "headline": "Application Designer & Developer",
+        "subline": "I'm Yann, an application designer at IPANOVA, where I craft intuitive user experiences.\nI am also a fullstack web developer, creating robust and scalable web applications."
+    },
+    "About": {
+        "title": "About me",
+        "description": "Meet Yann THOBENA, Application Designer & Developer from Toulouse, France",
+        "intro": {
+            "title": "Introduction"
+        },
+        "work": {
+            "title": "Work Experience"
+        },
+        "studies": {
+            "title": "Education & Training"
+        },
+        "technical": {
+            "title": "Technical skills"
+        }
+    },
+    "Blog": {
+        "title": "Writing about design applications, AI, tech stuff and more...",
+        "description": "Read what Yann has been up to recently"
+    },
+    "Work": {
+        "title": "My projects",
+        "description": "Design and dev projects by Yann"
+    },
+    "Hobbies": {
+        "title": "My passions",
+        "description": "Discover Yann's passions"
+    },
+    "Navigation": {
+        "home": "Home",
+        "about": "About",
+        "work": "Work",
+        "blog": "Blog",
+        "hobbies": "Hobbies"
+    },
+    "Newsletter": {
+        "title": "Subscribe to Yann's Newsletter",
+        "description": "I occasionally write about software design, technology, and share thoughts on the intersection of code and users needs."
+    },
+    "Common": {
+        "latestFromBlog": "Latest from the blog"
+    }
+}

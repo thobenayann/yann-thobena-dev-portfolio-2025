@@ -1,6 +1,5 @@
 'use client';
 
-import { formatDate } from '@/app/utils/formatDate';
 import {
     Column,
     Flex,
@@ -11,6 +10,7 @@ import {
     Text,
 } from '@/once-ui/components';
 import { BlogPost } from '@/types/content';
+import { formatDate } from '@/utils/formatDate';
 import styles from './Posts.module.scss';
 
 interface PostProps {

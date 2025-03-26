@@ -1,7 +1,3 @@
-import { baseURL } from '@/app/resources';
-import { person } from '@/app/resources/content';
-import { formatDate } from '@/app/utils/formatDate';
-import { getPosts } from '@/app/utils/utils';
 import { CustomMDX } from '@/components/mdx';
 import { ProjectLinks } from '@/components/ProjectLinks';
 import ScrollToHash from '@/components/ScrollToHash';
@@ -14,17 +10,22 @@ import {
     SmartImage,
     Text,
 } from '@/once-ui/components';
+import { baseURL } from '@/resources';
+import { person } from '@/resources/content';
+import { formatDate } from '@/utils/formatDate';
+import { getPosts } from '@/utils/utils';
 import { serialize } from 'next-mdx-remote/serialize';
 import { notFound } from 'next/navigation';
 
 interface WorkParams {
     params: Promise<{
         slug: string;
+        locale: string;
     }>;
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-    const posts = getPosts(['src', 'app', 'work', 'projects']);
+    const posts = getPosts(['work', 'projects'], 'fr');
     return posts.map((post) => ({
         slug: post.slug,
     }));
@@ -33,9 +34,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 export async function generateMetadata(props: WorkParams) {
     const params = await props.params;
 
-    const { slug } = params;
+    const { slug, locale } = params;
 
-    const post = getPosts(['src', 'app', 'work', 'projects']).find(
+    const post = getPosts(['work', 'projects'], locale).find(
         (post) => post.slug === slug
     );
 
@@ -84,22 +85,23 @@ export async function generateMetadata(props: WorkParams) {
 export default async function Project(props: WorkParams) {
     try {
         const params = await props.params;
-        const posts = getPosts(['src', 'app', 'work', 'projects']);
+        const { slug, locale } = params;
+        const posts = getPosts(['work', 'projects'], locale);
 
         if (!Array.isArray(posts) || posts.length === 0) {
             console.error('No posts found or invalid posts array');
             notFound();
         }
 
-        const post = posts.find((post) => post.slug === params.slug);
+        const post = posts.find((post) => post.slug === slug);
 
         if (!post) {
-            console.error(`Post not found for slug: ${params.slug}`);
+            console.error(`Post not found for slug: ${slug}`);
             notFound();
         }
 
         if (!post.content || typeof post.content !== 'string') {
-            console.error(`Invalid content for post with slug: ${params.slug}`);
+            console.error(`Invalid content for post with slug: ${slug}`);
             return (
                 <Column as='section' maxWidth='m' horizontal='center' gap='l'>
                     <Column maxWidth='xs' gap='16'>
@@ -128,9 +130,7 @@ export default async function Project(props: WorkParams) {
         }
 
         if (!post.metadata) {
-            console.error(
-                `Invalid metadata for post with slug: ${params.slug}`
-            );
+            console.error(`Invalid metadata for post with slug: ${slug}`);
             post.metadata = {
                 title: 'Contenu non disponible',
                 publishedAt: new Date().toISOString(),

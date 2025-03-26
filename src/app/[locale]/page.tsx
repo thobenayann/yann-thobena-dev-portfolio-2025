@@ -9,14 +9,30 @@ import {
     Text,
 } from '@/once-ui/components';
 
-import { baseURL, routes } from '@/app/resources';
-import { about, home, newsletter, person } from '@/app/resources/content';
 import { Mailchimp } from '@/components';
 import { Posts } from '@/components/blog/Posts';
+import { routing } from '@/i18n/routing';
+import { baseURL, routes } from '@/resources';
+import { about, newsletter, person } from '@/resources/content';
+import { hasLocale, useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { use } from 'react';
 
-export async function generateMetadata() {
-    const title = home.title;
-    const description = home.description;
+interface PageProps {
+    params: Promise<{ locale: string }>;
+}
+
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: PageProps) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'Home' });
+
+    const title = t('title');
+    const description = t('description');
     const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
     return {
@@ -40,10 +56,32 @@ export async function generateMetadata() {
             description,
             images: [ogImage],
         },
+        alternates: {
+            canonical: `https://${baseURL}`,
+            languages: routing.locales.reduce(
+                (acc, locale) => ({
+                    ...acc,
+                    [locale]: `https://${baseURL}/${locale}`,
+                }),
+                {}
+            ),
+        },
     };
 }
 
-export default function Home() {
+export default function Home({ params }: PageProps) {
+    const { locale } = use(params);
+
+    if (!hasLocale(routing.locales, locale)) {
+        notFound();
+    }
+
+    // Enable static rendering
+    setRequestLocale(locale);
+
+    const t = useTranslations('Home');
+    const tCommon = useTranslations('Common');
+
     return (
         <Column maxWidth='m' gap='xl' horizontal='center'>
             <script
@@ -53,11 +91,11 @@ export default function Home() {
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'WebPage',
-                        name: home.title,
-                        description: home.description,
+                        name: t('title'),
+                        description: t('description'),
                         url: `https://${baseURL}`,
                         image: `${baseURL}/og?title=${encodeURIComponent(
-                            home.title
+                            t('title')
                         )}`,
                         publisher: {
                             '@type': 'Person',
@@ -79,7 +117,7 @@ export default function Home() {
                         paddingBottom='m'
                     >
                         <Heading wrap='balance' variant='display-strong-l'>
-                            {home.headline}
+                            {t('headline')}
                         </Heading>
                     </RevealFx>
                     <RevealFx
@@ -94,7 +132,7 @@ export default function Home() {
                             onBackground='neutral-weak'
                             variant='heading-default-xl'
                         >
-                            {home.subline}
+                            {t('subline')}
                         </Text>
                     </RevealFx>
                     <RevealFx translateY='12' delay={0.4} horizontal='start'>
@@ -124,7 +162,7 @@ export default function Home() {
                 </Column>
             </Column>
             <RevealFx translateY='16' delay={0.6}>
-                <Projects range={[1, 1]} />
+                <Projects range={[1, 1]} locale={locale} />
             </RevealFx>
             {routes['/blog'] && (
                 <Flex fillWidth gap='24' mobileDirection='column'>
@@ -134,15 +172,15 @@ export default function Home() {
                             variant='display-strong-xs'
                             wrap='balance'
                         >
-                            Latest from the blog
+                            {tCommon('latestFromBlog')}
                         </Heading>
                     </Flex>
                     <Flex flex={3} paddingX='20'>
-                        <Posts range={[1, 2]} columns='2' />
+                        <Posts range={[1, 2]} columns='2' locale={locale} />
                     </Flex>
                 </Flex>
             )}
-            <Projects range={[2]} />
+            <Projects range={[2]} locale={locale} />
             {newsletter.display && <Mailchimp newsletter={newsletter} />}
         </Column>
     );

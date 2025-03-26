@@ -1,23 +1,46 @@
-import { getPosts } from "@/app/utils/utils";
-import { baseURL, routes as routesConfig } from "@/app/resources";
+import { baseURL } from '@/resources';
+import { getPosts } from '@/utils/utils';
+import { MetadataRoute } from 'next';
 
-export default async function sitemap() {
-  const blogs = getPosts(["src", "app", "blog", "posts"]).map((post) => ({
-    url: `https://${baseURL}/blog/${post.slug}`,
-    lastModified: post.metadata.publishedAt,
-  }));
+export default function sitemap(): MetadataRoute.Sitemap {
+    const blogs = {
+        fr: getPosts(['blog', 'posts'], 'fr').map((post) => ({
+            url: `https://${baseURL}/fr/blog/${post.slug}`,
+            lastModified: new Date(post.metadata.publishedAt),
+        })),
+        en: getPosts(['blog', 'posts'], 'en').map((post) => ({
+            url: `https://${baseURL}/en/blog/${post.slug}`,
+            lastModified: new Date(post.metadata.publishedAt),
+        })),
+    };
 
-  const works = getPosts(["src", "app", "work", "projects"]).map((post) => ({
-    url: `https://${baseURL}/work/${post.slug}`,
-    lastModified: post.metadata.publishedAt,
-  }));
+    const works = {
+        fr: getPosts(['work', 'projects'], 'fr').map((post) => ({
+            url: `https://${baseURL}/fr/work/${post.slug}`,
+            lastModified: new Date(post.metadata.publishedAt),
+        })),
+        en: getPosts(['work', 'projects'], 'en').map((post) => ({
+            url: `https://${baseURL}/en/work/${post.slug}`,
+            lastModified: new Date(post.metadata.publishedAt),
+        })),
+    };
 
-  const activeRoutes = Object.keys(routesConfig).filter((route) => routesConfig[route]);
-
-  const routes = activeRoutes.map((route) => ({
-    url: `https://${baseURL}${route !== "/" ? route : ""}`,
-    lastModified: new Date().toISOString().split("T")[0],
-  }));
-
-  return [...routes, ...blogs, ...works];
+    return [
+        {
+            url: `https://${baseURL}`,
+            lastModified: new Date(),
+        },
+        {
+            url: `https://${baseURL}/fr`,
+            lastModified: new Date(),
+        },
+        {
+            url: `https://${baseURL}/en`,
+            lastModified: new Date(),
+        },
+        ...blogs.fr,
+        ...blogs.en,
+        ...works.fr,
+        ...works.en,
+    ];
 }

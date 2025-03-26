@@ -1,8 +1,8 @@
 'use client';
 
-import { hobbies } from '@/app/resources/content';
 import ScrollElement from '@/components/core/scroll-element';
 import { SmartImage } from '@/once-ui/components';
+import { hobbies } from '@/resources/content';
 import Masonry from 'react-masonry-css';
 import styles from './Hobbies.module.scss';
 

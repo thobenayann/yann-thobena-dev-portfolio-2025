@@ -1,15 +1,21 @@
-import { getPosts } from '@/app/utils/utils';
 import { Grid } from '@/once-ui/components';
+import { getPosts } from '@/utils/utils';
 import { Post } from './Post';
 
 interface PostsProps {
     range?: [number] | [number, number];
     columns?: '1' | '2' | '3';
     thumbnail?: boolean;
+    locale: string;
 }
 
-export function Posts({ range, columns = '1', thumbnail = false }: PostsProps) {
-    const allBlogs = getPosts(['src', 'app', 'blog', 'posts']);
+export function Posts({
+    range,
+    columns = '1',
+    thumbnail = false,
+    locale,
+}: PostsProps) {
+    const allBlogs = getPosts(['blog', 'posts'], locale);
 
     const sortedBlogs = allBlogs.sort((a, b) => {
         return (
