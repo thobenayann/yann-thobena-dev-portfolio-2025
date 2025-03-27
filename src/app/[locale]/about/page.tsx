@@ -15,35 +15,40 @@ import {
     Text,
 } from '@/once-ui/components';
 import { about, person, social } from '@/resources/content';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 export default function About() {
+    const t = useTranslations('About');
+    const tStatic = useTranslations('StaticContent');
+
     const structure = [
         {
-            title: about.intro.title,
+            title: t('intro.title'),
             display: about.intro.display,
             items: [],
         },
         {
-            title: about.work.title,
+            title: t('work.title'),
             display: about.work.display,
             items: about.work.experiences.map(
                 (experience) => experience.company
             ),
         },
         {
-            title: about.studies.title,
+            title: t('studies.title'),
             display: about.studies.display,
             items: about.studies.institutions.map(
                 (institution) => institution.name
             ),
         },
         {
-            title: about.technical.title,
+            title: t('technical.title'),
             display: about.technical.display,
             items: about.technical.skills.map((skill) => skill.title),
         },
     ];
+
     return (
         <Column maxWidth='m'>
             {about.tableOfContent.display && (
@@ -72,7 +77,7 @@ export default function About() {
                         <Avatar src={person.avatar} size='xl' />
                         <Flex gap='8' vertical='center'>
                             <Icon onBackground='accent-weak' name='globe' />
-                            {person.location}
+                            {tStatic('person.location')}
                         </Flex>
                         {person.languages.length > 0 && (
                             <Flex wrap gap='8'>
@@ -87,7 +92,7 @@ export default function About() {
                 )}
                 <Column className={styles.blockAlign} flex={9} maxWidth={40}>
                     <Column
-                        id={about.intro.title}
+                        id={t('intro.title')}
                         fillWidth
                         minHeight='160'
                         vertical='center'
@@ -114,7 +119,9 @@ export default function About() {
                                     name='calendar'
                                     onBackground='brand-weak'
                                 />
-                                <Flex paddingX='8'>Schedule a call</Flex>
+                                <Flex paddingX='8'>
+                                    {t('calendar.schedule')}
+                                </Flex>
                                 <IconButton
                                     href={about.calendar.link}
                                     data-border='rounded'
@@ -134,7 +141,7 @@ export default function About() {
                             variant='display-default-xs'
                             onBackground='neutral-weak'
                         >
-                            {person.role}
+                            {tStatic('person.role')}
                         </Text>
                         {social.length > 0 && (
                             <Flex
@@ -154,7 +161,9 @@ export default function About() {
                                                     className='s-flex-hide'
                                                     href={item.link}
                                                     prefixIcon={item.icon}
-                                                    label={item.name}
+                                                    label={tStatic(
+                                                        `social.${item.name.toLowerCase()}`
+                                                    )}
                                                     size='s'
                                                     variant='secondary'
                                                 />
@@ -187,11 +196,11 @@ export default function About() {
                         <>
                             <Heading
                                 as='h2'
-                                id={about.work.title}
+                                id={t('work.title')}
                                 variant='display-strong-s'
                                 marginBottom='m'
                             >
-                                {about.work.title}
+                                {t('work.title')}
                             </Heading>
                             <Column fillWidth gap='l' marginBottom='40'>
                                 {about.work.experiences.map(
@@ -317,11 +326,11 @@ export default function About() {
                         <>
                             <Heading
                                 as='h2'
-                                id={about.studies.title}
+                                id={t('studies.title')}
                                 variant='display-strong-s'
                                 marginBottom='m'
                             >
-                                {about.studies.title}
+                                {t('studies.title')}
                             </Heading>
                             <Column fillWidth gap='l' marginBottom='40'>
                                 {about.studies.institutions.map(
@@ -354,11 +363,11 @@ export default function About() {
                         <>
                             <Heading
                                 as='h2'
-                                id={about.technical.title}
+                                id={t('technical.title')}
                                 variant='display-strong-s'
                                 marginBottom='40'
                             >
-                                {about.technical.title}
+                                {t('technical.title')}
                             </Heading>
                             <Column fillWidth gap='l'>
                                 {about.technical.skills.map((skill, index) => (

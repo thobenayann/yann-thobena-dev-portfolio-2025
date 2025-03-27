@@ -5,7 +5,6 @@ import {
     Button,
     Column,
     Flex,
-    Heading,
     Input,
     Text,
 } from '@/once-ui/components';
@@ -13,15 +12,17 @@ import { SpacingToken } from '@/once-ui/types';
 import { mailchimp } from '@/resources';
 import {
     NewsletterFormValues,
-    newsletterSchema,
+    getNewsletterSchema,
 } from '@/schemas/newsletter.schema';
 import { NewsletterProps } from '@/types/content';
 import { OpacityLevel } from '@/types/effects';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
+    const locale = useLocale() as 'en' | 'fr';
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
         formState: { errors },
         reset,
     } = useForm<NewsletterFormValues>({
-        resolver: zodResolver(newsletterSchema),
+        resolver: zodResolver(getNewsletterSchema(locale)),
         defaultValues: {
             email: '',
         },
@@ -53,7 +54,10 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to subscribe');
+                throw new Error(
+                    errorData.error ||
+                        newsletter.errorMessages[locale].serverError
+                );
             }
 
             setIsSuccess(true);
@@ -62,7 +66,7 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
             setServerError(
                 error instanceof Error
                     ? error.message
-                    : 'An unexpected error occurred'
+                    : newsletter.errorMessages[locale].serverError
             );
         } finally {
             setIsSubmitting(false);
@@ -125,16 +129,16 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
                 align='center'
                 style={{ textAlign: 'center' }}
             >
-                <Heading variant='display-strong-s'>{newsletter.title}</Heading>
+                {newsletter.title[locale]}
                 <Text variant='body-default-m' onBackground='neutral-medium'>
-                    {newsletter.description}
+                    {newsletter.description[locale]}
                 </Text>
                 {isSuccess ? (
                     <Text
                         variant='body-default-m'
                         onBackground='success-medium'
                     >
-                        Thanks for subscribing!
+                        {newsletter.successMessage[locale]}
                     </Text>
                 ) : (
                     <form
@@ -153,7 +157,9 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
                                     id='newsletter-email'
                                     label='Email'
                                     labelAsPlaceholder
-                                    placeholder='Enter your email'
+                                    placeholder={
+                                        newsletter.placeholderText[locale]
+                                    }
                                     type='email'
                                     autoComplete='email'
                                     disabled={isSubmitting}
@@ -167,9 +173,7 @@ export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
                                     disabled={isSubmitting}
                                     style={{ flex: 1, width: '100%' }}
                                 >
-                                    {isSubmitting
-                                        ? 'Subscribing...'
-                                        : 'Subscribe'}
+                                    {newsletter.buttonText[locale]}
                                 </Button>
                             </Flex>
                             {serverError && (

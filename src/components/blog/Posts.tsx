@@ -9,12 +9,7 @@ interface PostsProps {
     locale: string;
 }
 
-export function Posts({
-    range,
-    columns = '1',
-    thumbnail = false,
-    locale,
-}: PostsProps) {
+export function Posts({ range, thumbnail = true, locale }: PostsProps) {
     const allBlogs = getPosts(['blog', 'posts'], locale);
 
     const sortedBlogs = allBlogs.sort((a, b) => {
@@ -35,7 +30,7 @@ export function Posts({
         <>
             {displayedBlogs.length > 0 && (
                 <Grid
-                    columns={columns}
+                    columns='1'
                     mobileColumns='1'
                     fillWidth
                     marginBottom='40'

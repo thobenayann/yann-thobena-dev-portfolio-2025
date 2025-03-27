@@ -1,9 +1,9 @@
 import { Mailchimp } from '@/components';
 import { Posts } from '@/components/blog/Posts';
 import { routing } from '@/i18n/routing';
-import { Column, Heading, Text } from '@/once-ui/components';
+import { Column } from '@/once-ui/components';
 import { baseURL } from '@/resources';
-import { blog, newsletter, person } from '@/resources/content';
+import { newsletter, person } from '@/resources/content';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -61,6 +61,9 @@ export default async function Blog({ params }: BlogParams) {
     // Enable static rendering
     setRequestLocale(locale);
 
+    // Get translations
+    const t = await getTranslations('Blog');
+
     return (
         <Column maxWidth='s'>
             <script
@@ -70,11 +73,11 @@ export default async function Blog({ params }: BlogParams) {
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'Blog',
-                        headline: blog.title,
-                        description: blog.description,
+                        headline: t('title'),
+                        description: t('description'),
                         url: `https://${baseURL}/blog`,
                         image: `${baseURL}/og?title=${encodeURIComponent(
-                            blog.title
+                            t('title')
                         )}`,
                         author: {
                             '@type': 'Person',
@@ -87,10 +90,7 @@ export default async function Blog({ params }: BlogParams) {
                     }),
                 }}
             />
-            <Heading variant='display-strong-l'>{blog.title}</Heading>
-            <Text>{blog.description}</Text>
-            <Posts range={[0, 2]} thumbnail locale={locale} />
-            <Posts range={[2]} columns='2' locale={locale} />
+            <Posts range={[1, 3]} locale={locale} />
             {newsletter.display && <Mailchimp newsletter={newsletter} />}
         </Column>
     );

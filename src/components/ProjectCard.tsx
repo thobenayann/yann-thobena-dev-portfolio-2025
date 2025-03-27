@@ -75,9 +75,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                         )}
                     </Flex>
                 )}
-                {(avatars?.length > 0 ||
-                    description?.trim() ||
-                    content?.trim()) && (
+                {(description?.trim() || content?.trim()) && (
                     <Column flex={7} gap='16'>
                         {avatars?.length > 0 && (
                             <AvatarGroup avatars={avatars} size='m' reverse />

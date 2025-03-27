@@ -3,61 +3,65 @@ import { routing } from '@/i18n/routing';
 import { Column } from '@/once-ui/components';
 import { baseURL } from '@/resources';
 import { person } from '@/resources/content';
-import { useTranslations } from 'next-intl';
+import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
+import { notFound } from 'next/navigation';
+
+interface WorkParams {
+    params: Promise<{
+        locale: string;
+    }>;
+}
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
+export async function generateMetadata({ params }: WorkParams) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Work' });
 
-    const title = t('title');
-    const description = t('description');
-    const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
-
     return {
-        title,
-        description,
+        title: t('title'),
+        description: t('description'),
         openGraph: {
-            title,
-            description,
+            title: t('title'),
+            description: t('description'),
+            url: `https://${baseURL}/work`,
+            siteName: person.name,
+            locale,
             type: 'website',
-            url: `https://${baseURL}/work/`,
-            images: [
-                {
-                    url: ogImage,
-                    alt: title,
-                },
-            ],
         },
         twitter: {
             card: 'summary_large_image',
-            title,
-            description,
-            images: [ogImage],
+            title: t('title'),
+            description: t('description'),
+        },
+        alternates: {
+            canonical: `https://${baseURL}/work`,
+            languages: routing.locales.reduce(
+                (acc, locale) => ({
+                    ...acc,
+                    [locale]: `https://${baseURL}/${locale}/work`,
+                }),
+                {}
+            ),
         },
     };
 }
 
-export default function Work({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = use(params);
+export default async function Work({ params }: WorkParams) {
+    const { locale } = await params;
+
+    if (!hasLocale(routing.locales, locale)) {
+        notFound();
+    }
 
     // Enable static rendering
     setRequestLocale(locale);
 
-    const t = useTranslations('Work');
+    // Get translations
+    const t = await getTranslations('Work');
 
     return (
         <Column maxWidth='m'>
@@ -70,16 +74,22 @@ export default function Work({
                         '@type': 'CollectionPage',
                         headline: t('title'),
                         description: t('description'),
-                        url: `https://${baseURL}/projects`,
-                        image: `${baseURL}/og?title=Design%20Projects`,
+                        url: `https://${baseURL}/work`,
+                        image: `${baseURL}/og?title=${encodeURIComponent(
+                            t('title')
+                        )}`,
                         author: {
                             '@type': 'Person',
                             name: person.name,
+                            image: {
+                                '@type': 'ImageObject',
+                                url: `${baseURL}${person.avatar}`,
+                            },
                         },
                     }),
                 }}
             />
-            <Projects locale={locale} />
+            <Projects range={[1, 3]} locale={locale} />
         </Column>
     );
 }

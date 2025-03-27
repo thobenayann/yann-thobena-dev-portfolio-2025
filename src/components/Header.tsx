@@ -8,11 +8,12 @@ import { Fade, Flex, Line, ToggleButton } from '@/once-ui/components';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { display, routes } from '@/resources';
-import { about, blog, hobbies, person, work } from '@/resources/content';
+import { person } from '@/resources/content';
+import { useTranslations } from 'next-intl';
 
 type TimeDisplayProps = {
     timeZone: string;
-    locale?: string; // Optionally allow locale, defaulting to 'en-GB'
+    locale?: string;
 };
 
 const TimeDisplay: React.FC<TimeDisplayProps> = ({
@@ -50,6 +51,8 @@ export default TimeDisplay;
 
 export const Header = () => {
     const pathname = usePathname() ?? '';
+    const t = useTranslations('Navigation');
+    const tStatic = useTranslations('StaticContent');
 
     return (
         <>
@@ -79,7 +82,7 @@ export const Header = () => {
                     textVariant='body-default-s'
                 >
                     {display.location && (
-                        <Flex hide='s'>{person.location}</Flex>
+                        <Flex hide='s'>{tStatic('person.location')}</Flex>
                     )}
                 </Flex>
                 <Flex fillWidth horizontal='center'>
@@ -110,7 +113,7 @@ export const Header = () => {
                                         className='s-flex-hide'
                                         prefixIcon='person'
                                         href='/about'
-                                        label={about.label}
+                                        label={t('about')}
                                         selected={pathname === '/about'}
                                     />
                                     <ToggleButton
@@ -127,7 +130,7 @@ export const Header = () => {
                                         className='s-flex-hide'
                                         prefixIcon='grid'
                                         href='/work'
-                                        label={work.label}
+                                        label={t('work')}
                                         selected={pathname.startsWith('/work')}
                                     />
                                     <ToggleButton
@@ -144,7 +147,7 @@ export const Header = () => {
                                         className='s-flex-hide'
                                         prefixIcon='book'
                                         href='/blog'
-                                        label={blog.label}
+                                        label={t('blog')}
                                         selected={pathname.startsWith('/blog')}
                                     />
                                     <ToggleButton
@@ -161,7 +164,7 @@ export const Header = () => {
                                         className='s-flex-hide'
                                         prefixIcon='hobbies'
                                         href='/hobbies'
-                                        label={hobbies.label}
+                                        label={t('hobbies')}
                                         selected={pathname.startsWith(
                                             '/hobbies'
                                         )}

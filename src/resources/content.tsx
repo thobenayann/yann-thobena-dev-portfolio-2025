@@ -1,4 +1,4 @@
-import { Flex, InlineCode, Tag, Text } from '@/once-ui/components';
+import { Flex, Heading, InlineCode, Tag, Text } from '@/once-ui/components';
 import {
     AboutContent,
     BlogContent,
@@ -24,16 +24,60 @@ const person: Person = {
     languages: ['French', 'English'], // optional: Leave the array empty if you don't want to display languages
 };
 
-const newsletter: NewsletterProps = {
+export const newsletter: NewsletterProps = {
     display: true,
-    title: <>Subscribe to {person.firstName}&apos;s Newsletter</>,
-    description: (
-        <>
-            I occasionally write about software design, technology, and share
-            thoughts on the intersection of code and users needs.
-        </>
-    ),
-};
+    title: {
+        en: (
+            <Heading as='h1' size='xl'>
+                Subscribe to my newsletter
+            </Heading>
+        ),
+        fr: (
+            <Heading as='h1' size='xl'>
+                Abonnez-vous à ma newsletter
+            </Heading>
+        ),
+    },
+    description: {
+        en: (
+            <Text size='m'>
+                Stay up to date with my latest articles about web development,
+                tech, and more.
+            </Text>
+        ),
+        fr: (
+            <Text size='m'>
+                Restez informé de mes derniers articles sur le développement
+                web, la tech et plus encore.
+            </Text>
+        ),
+    },
+    buttonText: {
+        en: 'Subscribe',
+        fr: "S'abonner",
+    },
+    placeholderText: {
+        en: 'Enter your email',
+        fr: 'Votre adresse email',
+    },
+    successMessage: {
+        en: 'Thank you for subscribing!',
+        fr: 'Merci de votre abonnement !',
+    },
+    errorMessages: {
+        en: {
+            alreadySubscribed: 'You are already subscribed to the newsletter.',
+            invalidEmail: 'Please enter a valid email address.',
+            serverError: 'An error occurred. Please try again later.',
+        },
+        fr: {
+            alreadySubscribed: 'Vous êtes déjà abonné à la newsletter.',
+            invalidEmail: 'Veuillez entrer une adresse email valide.',
+            serverError:
+                'Une erreur est survenue. Veuillez réessayer plus tard.',
+        },
+    },
+} as const;
 
 const social: SocialLink[] = [
     // Links are automatically displayed.
@@ -90,10 +134,11 @@ const about: AboutContent = {
         title: 'Introduction',
         description: (
             <>
-                Yann is a Toulouse based application designer with a passion for
-                transforming complex challenges into simple, elegant design
-                solutions. Her work spans digital interfaces, interactive
-                experiences, and the convergence of design and technology.
+                Yann est un concepteur développeur d&apos;applications basé à
+                Toulouse, passionné par la transformation de défis complexes en
+                solutions simples et élégantes. Son travail couvre les
+                interfaces numériques, les expériences interactives et la
+                convergence entre conception et technologie.
             </>
         ),
     },
@@ -610,4 +655,4 @@ const hobbies: HobbiesContent = {
     ],
 };
 
-export { about, blog, hobbies, home, newsletter, person, social, work };
+export { about, blog, hobbies, home, person, social, work };

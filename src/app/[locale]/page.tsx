@@ -1,19 +1,12 @@
 import { Projects } from '@/components/work/Projects';
-import {
-    Avatar,
-    Button,
-    Column,
-    Flex,
-    Heading,
-    RevealFx,
-    Text,
-} from '@/once-ui/components';
+import { Column, Flex, Heading, RevealFx } from '@/once-ui/components';
 
 import { Mailchimp } from '@/components';
 import { Posts } from '@/components/blog/Posts';
+import { LocalizedHome } from '@/components/LocalizedHome';
 import { routing } from '@/i18n/routing';
 import { baseURL, routes } from '@/resources';
-import { about, newsletter, person } from '@/resources/content';
+import { newsletter, person } from '@/resources/content';
 import { hasLocale, useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -79,7 +72,7 @@ export default function Home({ params }: PageProps) {
     // Enable static rendering
     setRequestLocale(locale);
 
-    const t = useTranslations('Home');
+    const tHome = useTranslations('Home');
     const tCommon = useTranslations('Common');
 
     return (
@@ -91,11 +84,11 @@ export default function Home({ params }: PageProps) {
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'WebPage',
-                        name: t('title'),
-                        description: t('description'),
+                        name: tHome('title'),
+                        description: tHome('description'),
                         url: `https://${baseURL}`,
                         image: `${baseURL}/og?title=${encodeURIComponent(
-                            t('title')
+                            tHome('title')
                         )}`,
                         publisher: {
                             '@type': 'Person',
@@ -109,57 +102,7 @@ export default function Home({ params }: PageProps) {
                 }}
             />
             <Column fillWidth paddingY='l' gap='m'>
-                <Column maxWidth='s'>
-                    <RevealFx
-                        translateY='4'
-                        fillWidth
-                        horizontal='start'
-                        paddingBottom='m'
-                    >
-                        <Heading wrap='balance' variant='display-strong-l'>
-                            {t('headline')}
-                        </Heading>
-                    </RevealFx>
-                    <RevealFx
-                        translateY='8'
-                        delay={0.2}
-                        fillWidth
-                        horizontal='start'
-                        paddingBottom='m'
-                    >
-                        <Text
-                            wrap='balance'
-                            onBackground='neutral-weak'
-                            variant='heading-default-xl'
-                        >
-                            {t('subline')}
-                        </Text>
-                    </RevealFx>
-                    <RevealFx translateY='12' delay={0.4} horizontal='start'>
-                        <Button
-                            id='about'
-                            data-border='rounded'
-                            href='/about'
-                            variant='secondary'
-                            size='m'
-                            arrowIcon
-                        >
-                            <Flex gap='8' vertical='center'>
-                                {about.avatar.display && (
-                                    <Avatar
-                                        style={{
-                                            marginLeft: '-0.75rem',
-                                            marginRight: '0.25rem',
-                                        }}
-                                        src={person.avatar}
-                                        size='m'
-                                    />
-                                )}
-                                {about.title}
-                            </Flex>
-                        </Button>
-                    </RevealFx>
-                </Column>
+                <LocalizedHome />
             </Column>
             <RevealFx translateY='16' delay={0.6}>
                 <Projects range={[1, 1]} locale={locale} />

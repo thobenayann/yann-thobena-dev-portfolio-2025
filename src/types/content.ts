@@ -13,8 +13,38 @@ export interface Person {
 
 export interface NewsletterProps {
     display: boolean;
-    title: ReactNode;
-    description: ReactNode;
+    title: {
+        en: ReactNode;
+        fr: ReactNode;
+    };
+    description: {
+        en: ReactNode;
+        fr: ReactNode;
+    };
+    buttonText: {
+        en: string;
+        fr: string;
+    };
+    placeholderText: {
+        en: string;
+        fr: string;
+    };
+    successMessage: {
+        en: string;
+        fr: string;
+    };
+    errorMessages: {
+        en: {
+            alreadySubscribed: string;
+            invalidEmail: string;
+            serverError: string;
+        };
+        fr: {
+            alreadySubscribed: string;
+            invalidEmail: string;
+            serverError: string;
+        };
+    };
 }
 
 export interface SocialLink {
